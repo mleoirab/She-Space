@@ -1,8 +1,0 @@
-import { POI_CATEGORIES } from "../data/pois";
-
-export const CATEGORY_COLORS = {
-    [POI_CATEGORIES.LIBRARY]: "#007AFF",
-    [POI_CATEGORIES.STUDY]: "#34C759",
-    [POI_CATEGORIES.AFFILIATE]: "#AF52DE",
-    [POI_CATEGORIES.CAMPUS]: "#FF9500",
-};
