@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { MapContainer, TileLayer, Popup, CircleMarker, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import "../leafletFix";
 import { CATEGORY_COLORS } from "./CategoryToggles";
 
 function FitBounds({ places }) {
