@@ -1,53 +1,73 @@
-import React, { useEffect } from "react";
-import { MapContainer, TileLayer, Popup, CircleMarker, useMap } from "react-leaflet";
-import L from "leaflet";
-import "leaflet/dist/leaflet.css";
-import "../leafletFix";
-import { CATEGORY_COLORS } from "./CategoryToggles";
+import React, { useMemo, useState } from "react";
+import { save } from "../utils/storage";
+import { computeCommunityScore, labelFromScore } from "../utils/scoring";
 
-function FitBounds({ places }) {
-  const map = useMap();
-  useEffect(() => {
-    const bounds = L.latLngBounds(places.map((p) => [p.lat, p.lng]));
-    map.fitBounds(bounds, { padding: [40, 90] });
-  }, [map, places]);
-  return null;
-}
+export default function Ratings({ placeId, ratingsByPlace, setRatingsByPlace }) {
+  const [form, setForm] = useState({
+    safe: 4,
+    welcoming: 4,
+    lighting: 4,
+    staffPresence: 3,
+    comment: "",
+  });
 
-export default function MapView({ places, onSelectPlace, presenceByPlace, getPresenceCount, scoreByPlace }) {
-  const fallbackCenter = [43.0096, -81.2737];
+  const ratings = ratingsByPlace[placeId] || [];
+  const summary = useMemo(() => computeCommunityScore(ratings), [ratings]);
+
+  const submit = () => {
+    setRatingsByPlace((prev) => {
+      const copy = structuredClone(prev);
+      copy[placeId] = [...(copy[placeId] || []), { ...form, createdAt: Date.now() }];
+      save("ratingsByPlace", copy);
+      return copy;
+    });
+    setForm((f) => ({ ...f, comment: "" }));
+  };
 
   return (
-    <MapContainer center={fallbackCenter} zoom={15} style={{ height: "100%", width: "100%" }}>
-      <TileLayer
-        attribution='&copy; OpenStreetMap contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
+    <div className="card">
+      <h3 className="cardTitle">Ratings</h3>
 
-      {places.length > 0 && <FitBounds places={places} />}
+      {summary ? (
+        <p className="muted">
+          Support Score: <b>{summary.community.toFixed(1)}</b> ({labelFromScore(summary.community)}) •{" "}
+          {summary.count} rating(s)
+        </p>
+      ) : (
+        <p className="muted">No ratings yet.</p>
+      )}
 
-      {places.map((p) => {
-        const color = CATEGORY_COLORS[p.category] || "#111";
-        const presence = getPresenceCount(presenceByPlace, p.id);
-        const score = scoreByPlace?.[p.id]?.score;
+      <div className="formGrid">
+        {[
+          ["safe", "Feeling safe"],
+          ["welcoming", "Welcoming to women & gender-diverse people"],
+          ["lighting", "Lighting"],
+          ["staffPresence", "Staff presence"],
+        ].map(([k, label]) => (
+          <label key={k} className="rangeRow">
+            <span>{label}</span>
+            <input
+              type="range"
+              min="1"
+              max="5"
+              value={form[k]}
+              onChange={(e) => setForm({ ...form, [k]: Number(e.target.value) })}
+            />
+            <b>{form[k]}</b>
+          </label>
+        ))}
 
-        return (
-          <CircleMarker
-            key={p.id}
-            center={[p.lat, p.lng]}
-            radius={10}
-            pathOptions={{ color, fillColor: color, fillOpacity: 0.9 }}
-            eventHandlers={{ click: () => onSelectPlace(p.id) }}
-          >
-            <Popup>
-              <b>{p.name}</b>
-              <div className="muted small">{p.category}</div>
-              <div>Presence now: <b>{presence}</b></div>
-              <div>Support score: <b>{score ?? "—"}</b></div>
-            </Popup>
-          </CircleMarker>
-        );
-      })}
-    </MapContainer>
+        <textarea
+          className="textarea"
+          placeholder="Optional comment..."
+          value={form.comment}
+          onChange={(e) => setForm({ ...form, comment: e.target.value })}
+        />
+
+        <button className="primaryBtn" onClick={submit}>
+          Submit rating
+        </button>
+      </div>
+    </div>
   );
 }
