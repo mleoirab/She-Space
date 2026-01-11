@@ -30,7 +30,7 @@ export default function PlaceDrawer({ place, presenceByPlace, setPresenceByPlace
       });
       setAiResult(data);
     } catch {
-      setAiError("AI service not running. Start the Python Gemini service on port 8000.");
+      setAiError("AI service not running. Start the Python Gemini service on port 8002.");
     } finally {
       setAiLoading(false);
     }

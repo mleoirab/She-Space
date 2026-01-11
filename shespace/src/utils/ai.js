@@ -1,5 +1,6 @@
 export async function getPlaceInsight({ placeName, ratingsSummary, recentComments }) {
-  const res = await fetch("http://localhost:8001/place-insight", {
+  
+  const res = await fetch("http://localhost:8002/place-insight", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({

@@ -79,9 +79,9 @@ export default function App() {
         <div className="header">
           <div>
             <h1 className="title">SheSpace</h1>
-            <p className="subtitle">
+            {/* <p className="subtitle">
               Women-friendly STEM study zones • privacy-first • AI insight (Gemini)
-            </p>
+            </p> */}
           </div>
 
           <label className="toggle">
