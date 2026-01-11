@@ -57,19 +57,6 @@ export default function App() {
   useEffect(() => save("walkPosts", walkPosts), [walkPosts]);
   useEffect(() => save("presenceByPlace", presenceByPlace), [presenceByPlace]);
 
-  // 🔥 Sync presence across browser tabs (pseudo multi-user)
-useEffect(() => {
-  const onStorage = (e) => {
-    if (e.key === "presenceByPlace" && e.newValue) {
-      setPresenceByPlace(JSON.parse(e.newValue));
-    }
-  };
-
-  window.addEventListener("storage", onStorage);
-  return () => window.removeEventListener("storage", onStorage);
-}, []);
-
-
   useEffect(() => {
     const placeIds = WESTERN_POIS.map((p) => p.id);
 
