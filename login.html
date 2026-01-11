@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SheSpace | Login</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌸</text></svg>" />
+    <link rel="stylesheet" href="/src/styles.css">
+</head>
+<body class="login-body">
+    <main class="login-page">
+        <section class="login-hero">
+            <!-- <div class="hero-badge">Community-first</div> -->
+            <h1>Welcome back to <span class="brand">SheSpace</span></h1>
+            <p class="hero-copy">Find and share the safest study and gathering spaces around you.</p>
+            <ul class="hero-points">
+                <li>🌱 Curated by community</li>
+                <li>🛡️ Safety insights at a glance</li>
+                <li>✨ Built for students & allies</li>
+            </ul>
+        </section>
+
+        <section class="login-card">
+            <header>
+                <p class="eyebrow">Sign in</p>
+                <h2>Access your spaces</h2>
+                <p class="subtle">Continue to save favorites, add ratings, and get tailored alerts.</p>
+            </header>
+
+
+            <form class="login-form" id="login-form">
+                <label class="input-field">
+                    <span>Email</span>
+                    <input type="email" name="email" placeholder="you@example.com" required />
+                </label>
+
+                <label class="input-field">
+                    <span>Password</span>
+                    <input type="password" name="password" placeholder="••••••••" required />
+                </label>
+
+                <div class="form-row">
+                    <label class="checkbox">
+                        <input type="checkbox" name="remember" />
+                        <span>Remember me</span>
+                    </label>
+                    <a class="link" href="#">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="primary-btn full">Sign in</button>
+
+                        <p id="login-error" class="form-error" hidden>Incorrect email or password.</p>
+
+                <p class="subtle center">No account? <a class="link" href="#">Create one</a></p>
+            </form>
+
+            <!-- <div class="divider"><span>or</span></div>
+            <button class="secondary-btn full">Continue with school email</button> -->
+        </section>
+    </main>
+
+    <script>
+                // Simple client-only auth mock. Replace with real auth when ready.
+                const mockUsers = [
+                    { email: 'fbala@example.com', password: 'password123', name: 'Demo User' }
+                ];
+
+                const form = document.getElementById('login-form');
+                const errorEl = document.getElementById('login-error');
+
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const data = new FormData(form);
+                    const email = (data.get('email') || '').trim().toLowerCase();
+                    const password = data.get('password');
+
+                    const matched = mockUsers.find(u => u.email === email && u.password === password);
+
+                    if (!matched) {
+                        errorEl.hidden = false;
+                        errorEl.textContent = 'Incorrect email or password.';
+                        return;
+                    }
+
+                    errorEl.hidden = true;
+
+                    // Persist a lightweight “session” flag for your SPA if needed later.
+                    localStorage.setItem('shespace_logged_in', 'true');
+                    localStorage.setItem('shespace_user_email', matched.email);
+                    localStorage.setItem('shespace_user_name', matched.name);
+
+                    // Redirect to the main app
+                    window.location.href = '/index.html';
+                });
+    </script>
+</body>
+</html>
