@@ -1,14 +1,21 @@
 import React, { useMemo, useState } from "react";
-import { checkIn, getPresenceCount } from "./Presence";
+// import { checkIn, getPresenceCount } from "./Presence";
 import { computeCommunityScore, labelFromScore } from "../utils/scoring";
 import { getPlaceInsight } from "../utils/ai";
+import { checkIn as presenceCheckIn, getPresenceSummary } from "./Presence";
+import { getUserId } from "../utils/user";
 
 export default function PlaceDrawer({ place, presenceByPlace, setPresenceByPlace, ratingsByPlace }) {
   const [aiLoading, setAiLoading] = useState(false);
   const [aiError, setAiError] = useState("");
   const [aiResult, setAiResult] = useState(null);
+  const userId = getUserId(); // ✅ PUT IT HERE
 
-  const presenceCount = getPresenceCount(presenceByPlace, place.id);
+  // const presenceCount = getPresenceCount(presenceByPlace, place.id);
+  const presence = getPresenceSummary(
+    presenceByPlace[place.id] || [],
+    userId
+  );
   const ratings = ratingsByPlace[place.id] || [];
   const summary = useMemo(() => computeCommunityScore(ratings), [ratings]);
 
@@ -43,7 +50,22 @@ export default function PlaceDrawer({ place, presenceByPlace, setPresenceByPlace
       <div className="muted small">Tags: {place.tags.join(", ")}</div>
 
       <div className="row" style={{ marginTop: 10 }}>
-        <div className="pill">Presence now: <b>{presenceCount}</b></div>
+      
+      <div className="pill">
+  Presence now: <b>{presence.total}</b>
+</div>
+
+{presence.mine && (
+  <div className="pill success">
+    ✅ You’re checked in here
+  </div>
+)}
+
+{!presence.mine && presence.others > 0 && (
+  <div className="pill info">
+    👩‍🎓 Someone just checked in
+  </div>
+)}
         <div className="pill">
           Support score: <b>{summary ? summary.community.toFixed(1) : "—"}</b>{" "}
           <span className="muted">{summary ? `(${labelFromScore(summary.community)})` : ""}</span>
@@ -53,8 +75,14 @@ export default function PlaceDrawer({ place, presenceByPlace, setPresenceByPlace
       <button
         className="primaryBtn"
         style={{ marginTop: 10 }}
-        onClick={() => checkIn(presenceByPlace, setPresenceByPlace, place.id)}
-      >
+        onClick={() =>
+          presenceCheckIn({
+            placeId: place.id,
+            presenceByPlace,
+            setPresenceByPlace,
+            userId,
+          })
+        }      >
         Check in (studying here)
       </button>
 
