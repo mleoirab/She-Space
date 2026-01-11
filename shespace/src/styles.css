@@ -1,0 +1,50 @@
+* { box-sizing: border-box; }
+body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+
+.layout { display: grid; grid-template-columns: 440px 1fr; height: 100vh; }
+.left { padding: 16px; overflow: auto; background: #fafafa; border-right: 1px solid #eee; }
+.right { height: 100vh; }
+.mapWrap { height: 100%; }
+
+.header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.title { margin: 0; font-size: 28px; }
+.subtitle { margin: 6px 0 0; color: #555; font-size: 13px; }
+
+.toggle { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #333; }
+
+.card { background: #fff; border: 1px solid #e6e6e6; border-radius: 12px; padding: 12px; margin-top: 12px; }
+.cardTitle { margin: 0 0 8px; font-size: 16px; }
+.muted { color: #666; }
+.small { font-size: 12px; }
+
+.row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.pill { background: #f3f3f3; padding: 6px 10px; border-radius: 999px; font-size: 13px; border: 1px solid #e6e6e6; }
+
+.primaryBtn { background: #111; color: #fff; border: none; padding: 10px 12px; border-radius: 10px; cursor: pointer; }
+.primaryBtn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.formGrid { display: grid; gap: 10px; }
+.rangeRow { display: grid; grid-template-columns: 1fr 1fr 32px; gap: 10px; align-items: center; }
+.textarea { width: 100%; min-height: 70px; border-radius: 10px; border: 1px solid #ddd; padding: 10px; }
+
+.list { margin-top: 10px; display: grid; gap: 10px; }
+.listItem { border: 1px solid #eee; border-radius: 10px; padding: 10px; background: #fcfcfc; }
+.quote { margin-top: 6px; font-style: italic; }
+
+.aiBox { margin-top: 10px; border: 1px dashed #ddd; border-radius: 10px; padding: 10px; background: #fff; }
+.pre { white-space: pre-wrap; font-size: 12px; background: #f6f6f6; padding: 10px; border-radius: 10px; }
+.error { color: #b00020; }
+
+/* Map legend overlay */
+.legend{
+  position:absolute; top:16px; left:16px; z-index:1000;
+  background: rgba(255,255,255,0.92);
+  border: 1px solid #eaeaea;
+  border-radius: 12px;
+  padding: 10px 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  font-size: 14px;
+}
+.legendTitle{ font-weight: 700; margin-bottom: 6px; }
+.legendRow{ display:flex; align-items:center; gap:8px; margin:4px 0; }
+.dot{ width:10px; height:10px; border-radius:999px; }
